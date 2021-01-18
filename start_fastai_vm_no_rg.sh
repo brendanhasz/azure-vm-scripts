@@ -3,7 +3,9 @@
 # Basically the same as fast.ai's script, w/ some small changes
 
 # Inputs
-read -p "Azure VM name / resource group (default: ${USER}-fastai): " vminput
+read -p "Existing resource group (default: ${USER}-fastai): " rginput
+rgname=${rginput:="${USER}-fastai"}
+read -p "Azure VM name (default: ${USER}-fastai): " vminput
 vmname=${vminput:="${USER}-fastai"}
 read -p "Region (default: centralus): " regioninput
 region=${regioninput:=centralus}
@@ -20,14 +22,14 @@ done
 
 # Create the instance
 echo "Creating Azure Data Science VM $vmname in $region ..."
-az vm create --name $vmname -g $vmname --image microsoft-dsvm:ubuntu-1804:1804:latest  --priority Low --size $instancetype --eviction-policy Deallocate --storage-sku StandardSSD_LRS --admin-user $username --admin-password $password
-az vm open-port --name $vmname -g $vmname --port 8000
+az vm create --name $vmname -g $rgname --image microsoft-dsvm:ubuntu-1804:1804:latest  --priority Low --size $instancetype --eviction-policy Deallocate --storage-sku StandardSSD_LRS --admin-user $username --admin-password $password
+az vm open-port --name $vmname -g $rgname --port 8000
 
 # Install Fast.ai
 echo "Installing  fastai v2..."
-az vm extension set --resource-group $vmname --vm-name $vmname --name customScript --publisher Microsoft.Azure.Extensions --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/Azure/DataScienceVM/master/Samples/fastai2/installfastai2.sh"],"commandToExecute": "./installfastai2.sh"}'
+az vm extension set --resource-group $rgname --vm-name $vmname --name customScript --publisher Microsoft.Azure.Extensions --protected-settings '{"fileUris": ["https://raw.githubusercontent.com/Azure/DataScienceVM/master/Samples/fastai2/installfastai2.sh"],"commandToExecute": "./installfastai2.sh"}'
 
 # Show done message w/ IP
-IP=$(az vm show -d -g ${vmname} --name ${vmname} --query publicIps -o tsv)
+IP=$(az vm show -d -g ${rgname} --name ${vmname} --query publicIps -o tsv)
 echo "Jupyter server running at https://${IP}:8000/"
 echo "Login userid is ${username} with password you entered above"
