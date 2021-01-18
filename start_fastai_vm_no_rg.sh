@@ -5,7 +5,7 @@
 # Inputs
 read -p "Existing resource group (default: ${USER}-fastai): " rginput
 rgname=${rginput:="${USER}-fastai"}
-read -p "Azure VM name (default: ${USER}-fastai): " vminput
+read -p "Azure VM name / resource group (default: ${USER}-fastai): " vminput
 vmname=${vminput:="${USER}-fastai"}
 read -p "Region (default: centralus): " regioninput
 region=${regioninput:=centralus}
@@ -22,7 +22,7 @@ done
 
 # Create the instance
 echo "Creating Azure Data Science VM $vmname in $region ..."
-az vm create --name $vmname -g $rgname --image microsoft-dsvm:ubuntu-1804:1804:latest  --priority Low --size $instancetype --eviction-policy Deallocate --storage-sku StandardSSD_LRS --admin-user $username --admin-password $password
+az vm create --name $vmname -g $rgname --image microsoft-dsvm:ubuntu-1804:1804:latest --size $instancetype --storage-sku StandardSSD_LRS --admin-user $username --admin-password $password
 az vm open-port --name $vmname -g $rgname --port 8000
 
 # Install Fast.ai
