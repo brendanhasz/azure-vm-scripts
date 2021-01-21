@@ -11,4 +11,4 @@ rgname=${rginput:="eastus-fastai-${USER}-rg"}
 az vm deallocate -g $rgname -n $vmname
 
 # Delete the resource group
-az group delete -n $vmname
+az group delete -n $rgname
