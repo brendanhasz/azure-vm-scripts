@@ -18,11 +18,12 @@ read -s -p "Re-enter Password: " password2
 echo
 done
 
-# Create the user group
-az group create --name $vmname -l $region
+# Create the resource group
+echo "Creating Azure Resource Group $rgname in $region ..."
+az group create --name $rgname -l $region
 
 # Create the instance
-echo "Creating Azure Data Science VM $vmname in $region ..."
+echo "Creating Azure Data Science VM $vmname ..."
 az vm create --name $vmname -g $rgname --image microsoft-dsvm:ubuntu-1804:1804:latest --size $instancetype --storage-sku StandardSSD_LRS --admin-user fastuser --admin-password $password
 az vm open-port --name $vmname -g $rgname --port 8000
 
