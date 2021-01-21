@@ -8,7 +8,7 @@ read -p "Azure resource group (default: eastus-fastai-${USER}-rg): " rginput
 rgname=${rginput:="eastus-fastai-${USER}-rg"}
 
 # Deallocate the VM
-az vm deallocate -g $vmname -n $vmname
+az vm deallocate -g $rgname -n $vmname
 
 # Delete the resource group
 az group delete -n $vmname
